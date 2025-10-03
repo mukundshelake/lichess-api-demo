@@ -6,6 +6,7 @@ import { Renderer } from '../interfaces';
 import { clockContent } from './clock';
 import '../../scss/_game.scss';
 import { renderBoard, renderPlayer } from './board';
+import { pieceSetManager } from '../pieceSetManager';
 
 export const renderGame: (ctrl: GameCtrl) => Renderer = ctrl => _ =>
   [
@@ -26,19 +27,35 @@ export const renderGame: (ctrl: GameCtrl) => Renderer = ctrl => _ =>
   ];
 
 const renderButtons = (ctrl: GameCtrl) =>
-  h('div.btn-group.mt-4', [
-    h(
-      'button.btn.btn-secondary',
-      {
-        attrs: { type: 'button', disabled: !ctrl.playing() },
-        on: {
-          click() {
-            if (confirm('Confirm?')) ctrl.resign();
+  h('div.game-controls', [
+    h('div.btn-group.mt-4', [
+      h(
+        'button.btn.btn-secondary',
+        {
+          attrs: { type: 'button', disabled: !ctrl.playing() },
+          on: {
+            click() {
+              if (confirm('Confirm?')) ctrl.resign();
+            },
           },
         },
-      },
-      ctrl.chess.fullmoves > 1 ? 'Resign' : 'Abort'
-    ),
+        ctrl.chess.fullmoves > 1 ? 'Resign' : 'Abort'
+      ),
+    ]),
+    h('div.piece-set-controls.mt-2', [
+      h(
+        'button.btn.btn-outline-primary.btn-sm',
+        {
+          attrs: { type: 'button', title: 'Switch piece set' },
+          on: {
+            click() {
+              pieceSetManager.togglePieceSet();
+            },
+          },
+        },
+        ['🎯 ', pieceSetManager.getCurrentPieceSet() === 'cburnett' ? 'Classic' : 'Minimal']
+      ),
+    ]),
   ]);
 
 const renderState = (ctrl: GameCtrl) => h('div.game-page__state', ctrl.game.state.status);

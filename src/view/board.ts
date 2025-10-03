@@ -2,6 +2,7 @@ import { Chessground } from 'chessground';
 import { Color } from 'chessops';
 import { h, VNode } from 'snabbdom';
 import { BoardCtrl } from '../game';
+import { pieceSetManager } from '../pieceSetManager';
 
 export const renderBoard = (ctrl: BoardCtrl) =>
   h(
@@ -12,6 +13,8 @@ export const renderBoard = (ctrl: BoardCtrl) =>
         hook: {
           insert(vnode) {
             ctrl.setGround(Chessground(vnode.elm as HTMLElement, ctrl.chessgroundConfig()));
+            // Initialize piece set on board creation
+            pieceSetManager.initializeBoardPieceSet();
           },
         },
       },

@@ -63,3 +63,26 @@
     text-align: center;
   }
 }
+
+/* Game controls styling */
+.game-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.piece-set-controls {
+  .btn {
+    font-size: 0.85rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+    }
+  }
+}

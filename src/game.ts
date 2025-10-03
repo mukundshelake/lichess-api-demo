@@ -8,6 +8,7 @@ import { opposite, parseUci } from 'chessops/util';
 import { Chess, defaultSetup } from 'chessops';
 import { makeFen, parseFen } from 'chessops/fen';
 import { chessgroundDests } from 'chessops/compat';
+import { pieceSetManager } from './pieceSetManager';
 
 export interface BoardCtrl {
   chess: Chess;
@@ -30,6 +31,11 @@ export class GameCtrl implements BoardCtrl {
     this.pov = this.game.black.id == this.root.auth.me?.id ? 'black' : 'white';
     this.onUpdate();
     this.redrawInterval = setInterval(root.redraw, 100);
+    
+    // Subscribe to piece set changes
+    pieceSetManager.subscribe(() => {
+      this.root.redraw();
+    });
   }
 
   onUnmount = () => {
