@@ -8,7 +8,7 @@ import { opposite, parseUci } from 'chessops/util';
 import { Chess, defaultSetup } from 'chessops';
 import { makeFen, parseFen } from 'chessops/fen';
 import { chessgroundDests } from 'chessops/compat';
-import { pieceSetManager } from './pieceSetManager';
+import { visualizationTrainer } from './pieceSetManager';
 
 export interface BoardCtrl {
   chess: Chess;
@@ -25,6 +25,7 @@ export class GameCtrl implements BoardCtrl {
   lastUpdateAt: number = Date.now();
   ground?: CgApi;
   redrawInterval: ReturnType<typeof setInterval>;
+  private lastMoveCount: number = 0;
 
   constructor(game: Game, readonly stream: Stream, private root: Ctrl) {
     this.game = game;
@@ -32,8 +33,8 @@ export class GameCtrl implements BoardCtrl {
     this.onUpdate();
     this.redrawInterval = setInterval(root.redraw, 100);
     
-    // Subscribe to piece set changes
-    pieceSetManager.subscribe(() => {
+    // Subscribe to visualization trainer changes
+    visualizationTrainer.subscribe(() => {
       this.root.redraw();
     });
   }
@@ -47,6 +48,17 @@ export class GameCtrl implements BoardCtrl {
     const setup = this.game.initialFen == 'startpos' ? defaultSetup() : parseFen(this.game.initialFen).unwrap();
     this.chess = Chess.fromSetup(setup).unwrap();
     const moves = this.game.state.moves.split(' ').filter((m: string) => m);
+    
+    // Check if there's a new move to speak
+    const currentMoveCount = moves.length;
+    if (currentMoveCount > this.lastMoveCount) {
+      const lastMove = moves[moves.length - 1];
+      const color = currentMoveCount % 2 === 1 ? 'white' : 'black';
+      const algebraic = this.uciToAlgebraic(lastMove);
+      this.speakMove(algebraic, color);
+      this.lastMoveCount = currentMoveCount;
+    }
+    
     moves.forEach((uci: string) => this.chess.play(parseUci(uci)!));
     const lastMove = moves[moves.length - 1];
     this.lastMove = lastMove && [lastMove.substr(0, 2) as Key, lastMove.substr(2, 2) as Key];
@@ -85,6 +97,33 @@ export class GameCtrl implements BoardCtrl {
   });
 
   setGround = (cg: CgApi) => (this.ground = cg);
+
+  // Convert UCI notation to algebraic notation
+  private uciToAlgebraic = (uci: string): string => {
+    if (!uci || uci.length < 4) return '';
+    
+    const from = uci.substring(0, 2);
+    const to = uci.substring(2, 4);
+    const promotion = uci.length > 4 ? uci.substring(4) : '';
+    
+    let move = from + '-' + to;
+    if (promotion) {
+      move += '=' + promotion.toUpperCase();
+    }
+    
+    return move;
+  };
+
+  // Text-to-speech functionality
+  private speakMove = (move: string, color: 'white' | 'black') => {
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(`${color} plays ${move}`);
+      utterance.rate = 0.8;
+      utterance.pitch = color === 'white' ? 1.1 : 0.9;
+      utterance.volume = 0.7;
+      speechSynthesis.speak(utterance);
+    }
+  };
 
   static open = (root: Ctrl, id: string): Promise<GameCtrl> =>
     new Promise<GameCtrl>(async resolve => {

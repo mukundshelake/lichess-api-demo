@@ -1,0 +1,275 @@
+/* Chess Visualization Training System */
+/* Progressive modes for blindfold chess practice */
+
+/* FIX BOARD PROPORTIONS - Ensure uniform square sizes */
+.game-page__board .cg-wrap {
+  box-sizing: border-box !important;
+  position: relative !important;
+  display: block !important;
+  height: 100% !important;
+  padding-bottom: 0 !important;
+  width: 100% !important;
+}
+
+/* FORCE ALL PIECES TO BE VISIBLE AND PROPERLY SIZED */
+.cg-wrap piece {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  position: absolute !important;
+  width: 12.5% !important;
+  height: 12.5% !important;
+  z-index: 2 !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  box-sizing: border-box !important;
+  transition: none !important; /* Remove animations to prevent piece duplication */
+  animation: none !important; /* Remove all animations */
+  /* Keep transforms for positioning - only remove during animations */
+}
+
+/* Disable animations but keep positioning transforms */
+.cg-wrap piece.anim {
+  transition: none !important;
+  animation: none !important;
+  /* Don't remove transform here - it's needed for positioning */
+}
+
+.cg-wrap piece.moving {
+  transition: none !important;
+  animation: none !important;
+  /* Don't remove transform here - it's needed for positioning */
+}
+
+.cg-wrap piece.dragging {
+  transition: none !important;
+  animation: none !important;
+  opacity: 1 !important;
+  /* Don't remove transform here - it's needed for positioning */
+}
+
+/* Force immediate removal of fading pieces */
+.cg-wrap piece.fading {
+  opacity: 0 !important;
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* Remove ghost pieces completely */
+.cg-wrap piece.ghost {
+  opacity: 0 !important;
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* Disable premove and other temporary piece states */
+.cg-wrap piece.premove,
+.cg-wrap piece.preselected {
+  opacity: 1 !important;
+  transition: none !important;
+}
+
+/* Ensure squares are properly sized (remove debug border) */
+cg-board square {
+  position: absolute !important;
+  width: 12.5% !important;
+  height: 12.5% !important;
+  pointer-events: none !important;
+}
+
+/* ===== STANDARD MODE (Default - Classic pieces) ===== */
+/* Force all pieces to be visible in standard mode */
+.cg-wrap piece,
+.cg-wrap.viz-standard piece {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
+.cg-wrap piece.pawn.white,
+.cg-wrap.viz-standard piece.pawn.white {
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PHBhdGggZD0iTTIyLjUgOWMtMi4yMSAwLTQgMS43OS00IDQgMCAuODkuMjkgMS43MS43OCAyLjM4QzE3LjMzIDE2LjUgMTYgMTguNTkgMTYgMjFjMCAyLjAzLjk0IDMuODQgMi40MSA1LjAzLTMgMS4wNi03LjQxIDUuNTUtNy40MSAxMy40N2gyM2MwLTcuOTItNC40MS0xMi40MS03LjQxLTEzLjQ3IDEuNDctMS4xOSAyLjQxLTMgMi40MS01LjAzIDAtMi40MS0xLjMzLTQuNS0zLjI4LTUuNjIuNDktLjY3Ljc4LTEuNDkuNzgtMi4zOCAwLTIuMjEtMS43OS00LTQtNHoiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg==');
+}
+
+/* Include all standard pieces here - keeping them as they were... */
+
+/* ===== MINIMAL MODE (Circular pieces with symbols) ===== */
+.cg-wrap.viz-minimal piece {
+  background-image: none !important;
+  border: 2px solid;
+  border-radius: 50%;
+  box-sizing: border-box;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
+.cg-wrap.viz-minimal piece.white {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-color: #2c3e50;
+  border-width: 2px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.cg-wrap.viz-minimal piece.black {
+  background-color: rgba(44, 62, 80, 0.95);
+  border-color: #ecf0f1;
+  border-width: 2px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.cg-wrap.viz-minimal piece:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  font-weight: 900;
+  font-family: 'Segoe UI', 'Apple Color Emoji', 'Noto Color Emoji', serif;
+  line-height: 1;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.cg-wrap.viz-minimal piece.pawn:before { content: '♟'; }
+.cg-wrap.viz-minimal piece.rook:before { content: '♜'; }
+.cg-wrap.viz-minimal piece.knight:before { content: '♞'; }
+.cg-wrap.viz-minimal piece.bishop:before { content: '♝'; }
+.cg-wrap.viz-minimal piece.queen:before { content: '♛'; }
+.cg-wrap.viz-minimal piece.king:before { content: '♚'; }
+
+.cg-wrap.viz-minimal piece.white:before {
+  color: #1a1a1a;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
+  font-weight: 900;
+}
+
+.cg-wrap.viz-minimal piece.black:before {
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+  font-weight: 900;
+}
+
+/* ===== CHECKERS MODE (All pieces look like checker pieces) ===== */
+.cg-wrap.viz-checkers piece {
+  background-image: none !important;
+  border-radius: 50%;
+  border: 3px solid #000;
+  box-sizing: border-box;
+}
+
+.cg-wrap.viz-checkers piece.white {
+  background-color: #fff;
+  border-color: #000;
+}
+
+.cg-wrap.viz-checkers piece.black {
+  background-color: #000;
+  border-color: #000;
+}
+
+/* Checkers pieces are completely blank - no letters or symbols */
+
+/* ===== MONOCHROME MODE (All pieces look like white checkers) ===== */
+.cg-wrap.viz-monochrome piece {
+  background-image: none !important;
+  border-radius: 50%;
+  border: 3px solid #000;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+
+/* Monochrome pieces are completely blank - no letters or symbols */
+
+/* ===== INVISIBLE MODE (Pieces only visible on interaction) ===== */
+.cg-wrap.viz-invisible piece {
+  background-image: none !important;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cg-wrap.viz-invisible piece:hover,
+.cg-wrap.viz-invisible piece.selected,
+.cg-wrap.viz-invisible piece.temporarily-visible {
+  opacity: 1;
+  background-color: rgba(100, 150, 255, 0.7);
+  border: 2px solid #0066ff;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(0, 102, 255, 0.5);
+}
+
+.cg-wrap.viz-invisible piece.temporarily-visible:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  font-family: serif;
+  pointer-events: none;
+}
+
+.cg-wrap.viz-invisible piece.pawn.temporarily-visible:before { content: '♟'; }
+.cg-wrap.viz-invisible piece.rook.temporarily-visible:before { content: '♜'; }
+.cg-wrap.viz-invisible piece.knight.temporarily-visible:before { content: '♞'; }
+.cg-wrap.viz-invisible piece.bishop.temporarily-visible:before { content: '♝'; }
+.cg-wrap.viz-invisible piece.queen.temporarily-visible:before { content: '♛'; }
+.cg-wrap.viz-invisible piece.king.temporarily-visible:before { content: '♚'; }
+
+/* ===== MEMORY MODE (Pieces disappear after time) ===== */
+.cg-wrap.viz-memory piece {
+  opacity: 1;
+  transition: opacity 1s ease;
+}
+
+.cg-wrap.viz-memory-hidden piece {
+  opacity: 0;
+  background-image: none !important;
+}
+
+/* ===== BLINDFOLD MODE (Complete blindfold) ===== */
+.cg-wrap.viz-blindfold piece {
+  background-image: none !important;
+  opacity: 0;
+}
+
+.cg-wrap.viz-blindfold cg-board {
+  background-image: none !important;
+  background-color: #2c3e50;
+}
+
+/* ===== MOVE HIGHLIGHTING CONTROLS ===== */
+.cg-wrap.hide-moves square.move-dest,
+.cg-wrap.hide-moves square.premove-dest {
+  background: none !important;
+}
+
+.cg-wrap.hide-targets square.last-move {
+  background-color: transparent !important;
+}
+
+/* ===== ENHANCED MOVE HIGHLIGHTING FOR TRAINING ===== */
+.cg-wrap:not(.hide-moves) square.move-dest {
+  background: radial-gradient(rgba(20, 85, 30, 0.7) 22%, #208530 0, rgba(0, 0, 0, 0.3) 0, rgba(0, 0, 0, 0) 0) !important;
+}
+
+.cg-wrap:not(.hide-targets) square.last-move {
+  background-color: rgba(255, 255, 0, 0.4) !important;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0.4; }
+}
+
+/* ===== COORDINATE HIDING FOR ADVANCED TRAINING ===== */
+.cg-wrap.hide-coordinates .cg-files,
+.cg-wrap.hide-coordinates .cg-ranks {
+  display: none;
+}

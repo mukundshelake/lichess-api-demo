@@ -1,0 +1,352 @@
+.games {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.game-widget {
+  border-radius: 0.25rem;
+  padding: 1em;
+  &,
+  & a {
+    color: var(--bs-gray) !important;
+  }
+  &:hover {
+    background: var(--bs-primary);
+    color: white !important;
+  }
+  &__opponent {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.game-page {
+  display: flex;
+  flex-flow: column;
+  width: 100%;
+  max-width: 1200px;
+  margin: 1rem auto;
+  padding: 0 1rem;
+
+  .game-main {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .game-left {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 0 0 auto;
+  }
+
+  .game-sidebar {
+    width: 300px;
+    flex: 0 0 300px;
+  }
+
+  &__player {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 0 0 auto;
+    padding: 0.75rem 1rem;
+    background: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 0.25rem 0;
+    
+    &__user {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      
+      &__title {
+        color: #007bff;
+        font-weight: 600;
+        font-size: 0.875rem;
+      }
+      
+      &__name {
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: #333;
+      }
+      
+      &__rating {
+        color: #666;
+        font-size: 0.875rem;
+      }
+      
+      &__lastmove {
+        font-size: 0.75rem;
+        color: #888;
+        background: #e9ecef;
+        padding: 0.125rem 0.375rem;
+        border-radius: 3px;
+        font-family: 'Courier New', monospace;
+        font-weight: 500;
+      }
+    }
+    
+    &__clock {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #333;
+      
+      tenths {
+        font-size: 0.8em;
+        color: #666;
+      }
+    }
+    
+    &.turn {
+      background: #fff3cd;
+      border-color: #ffeaa7;
+      
+      .game-page__player__clock {
+        color: #856404;
+      }
+    }
+  }
+
+  &__board {
+    width: 512px;
+    height: 512px;
+    margin: 0.5rem 0;
+  }
+
+  .visualization-panel {
+    background: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 1rem;
+    
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      
+      h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #333;
+        margin: 0;
+      }
+      
+      .current-mode-badge {
+        background: #007bff;
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+    }
+    
+    .mode-controls {
+      margin-bottom: 1rem;
+      
+      label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #555;
+        margin-bottom: 0.25rem;
+      }
+      
+      .form-select {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background: white;
+        font-size: 0.875rem;
+        margin-bottom: 0.75rem;
+        
+        &:focus {
+          border-color: #007bff;
+          box-shadow: 0 0 0 0.125rem rgba(0, 123, 255, 0.25);
+          outline: none;
+        }
+      }
+      
+      .cycle-btn {
+        width: 100%;
+        padding: 0.5rem;
+        font-size: 0.875rem;
+        border-radius: 4px;
+        border: none;
+        background: #28a745;
+        color: white;
+        cursor: pointer;
+        
+        &:hover {
+          background: #218838;
+        }
+      }
+    }
+    
+    .mode-description {
+      margin-bottom: 1rem;
+      
+      p {
+        font-size: 0.8rem;
+        color: #666;
+        line-height: 1.4;
+        margin: 0;
+        font-style: italic;
+      }
+    }
+    
+    .memory-settings {
+      label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #555;
+        margin-bottom: 0.5rem;
+      }
+      
+      .memory-slider {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        
+        .form-range {
+          flex: 1;
+        }
+        
+        .time-display {
+          font-size: 0.875rem;
+          font-weight: 500;
+          color: #333;
+          min-width: 2rem;
+        }
+      }
+    }
+  }
+
+  &__player {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: min(80vh, 80vw);
+    padding: 0.3rem 0.8rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0.25rem;
+    margin: 0.2rem 0;
+
+    &.turn {
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 0.5rem rgba(255, 255, 255, 0.3);
+    }
+
+    &__user {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+
+      &__title {
+        font-weight: bold;
+        color: #ffd700;
+        font-size: 0.8rem;
+      }
+
+      &__name {
+        font-weight: 500;
+        font-size: 0.85rem;
+      }
+
+      &__rating {
+        color: #ccc;
+        font-size: 0.75rem;
+      }
+    }
+
+    &__clock {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      font-size: 1.4rem;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      min-width: 80px;
+      text-align: center;
+    }
+
+    &.turn &__clock {
+      background: rgba(0, 100, 0, 0.4);
+      color: #90EE90;
+      box-shadow: 0 0 8px rgba(144, 238, 144, 0.3);
+    }
+  }
+
+  &__state {
+    text-align: center;
+  }
+}
+
+/* Game controls styling */
+.game-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.piece-set-controls {
+  .btn {
+    font-size: 0.85rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+    }
+
+/* Visualization Trainer Styling */
+.game-actions {
+  background: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-top: 1rem;
+  
+  h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 0.75rem 0;
+  }
+  
+  .resign-btn {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 4px;
+    border: none;
+    background: #dc3545;
+    color: white;
+    cursor: pointer;
+    
+    &:hover {
+      background: #c82333;
+    }
+    
+    &:disabled {
+      background: #6c757d;
+      cursor: not-allowed;
+    }
+  }
+}
+
+/* Visualization Trainer Styling */
+
